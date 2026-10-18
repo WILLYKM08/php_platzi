@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Controllers;
-use Framework\Validator;
 
 class LinksController
 {
@@ -30,7 +29,7 @@ class LinksController
 
     public function store()
     {
-        $validator = new Validator($_POST, [
+        $validator = validator($_POST, [
             'title'       => 'required|min:3|max:190',
             'url'         => 'required|url|max:190',
             'description' => 'required|min:10|max:500'
@@ -52,7 +51,6 @@ class LinksController
             'create-link', 
             [
                 'title' => 'Crear proyecto',
-                'errors' => $validator->errors(),
             ]
         );
     }
@@ -63,8 +61,7 @@ class LinksController
             'id' => $_POST['id'] ?? null
         ]);
 
-        header('Location: /links');
-        exit;
+        redirect('/links');
     }
 
     public function edit()
@@ -83,7 +80,7 @@ class LinksController
 
     public function update()
     {
-        $validator = new Validator($_POST, [
+        $validator = validator($_POST, [
             'title'       => 'required|min:3|max:190',
             'url'         => 'required|url|max:190',
             'description' => 'required|min:10|max:500'
@@ -109,11 +106,7 @@ class LinksController
             'edit-link', 
             [
                 'title' => 'Editar proyecto',
-                'link'  => db()
-                ->query('SELECT * FROM links WHERE id = :id', [
-                    'id' => $_GET['id'] ?? null
-                ])->firstOrFail(),
-                'errors' => $validator->errors(),
+                'link'  => $link,
             ]
         );
     }

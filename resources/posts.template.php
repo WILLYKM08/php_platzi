@@ -1,4 +1,4 @@
-<?php require __DIR__ . '/partials/header.php'; ?>
+<?php partials('header'); ?>
 <div class="border-b border-gray-200 pb-8 mb-8">
 <h2 class="text-4xl font-semibold text-gray-900 sm:text-5xl">
     <?= $post['title'] ?>
@@ -14,4 +14,4 @@
     <?= $post['content'] ?>
 </p>
 </div>
-<?php require __DIR__ . '/partials/footer.php'; ?>
+<?php partials('footer'); ?>

@@ -1,4 +1,4 @@
-<?php require __DIR__ . '/partials/header.php'; ?>
+<?php partials('header'); ?>
 <div class="border-b border-gray-200 pb-8 mb-8">
 <h2 class="text-4xl font-semibold text-gray-900 sm:text-5xl text-center">Crea un enlace o proyecto</h2>
 </div>
@@ -46,12 +46,6 @@
     </div>
 </form>
 
-<?php if (!empty($errors)): ?>
-<ul class="mt-4 text-red-500">
-    <?php foreach($errors as $error): ?>
-    <li class="text-xs">&rarr; <?= $error ?></li>
-    <?php endforeach; ?>
-</ul>
-<?php endif; ?>
+<?php partials('errors'); ?>
 </div>
-<?php require __DIR__ . '/partials/footer.php'; ?>
+<?php partials('footer'); ?>

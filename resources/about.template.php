@@ -1,3 +1,3 @@
-<?php require __DIR__ . '/partials/header.php'; ?>
+<?php partials('header'); ?>
 <h1>Acerca de mí</h1>
-<?php require __DIR__ . '/partials/footer.php'; ?>
+<?php partials('footer'); ?>

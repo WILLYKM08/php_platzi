@@ -1,6 +1,7 @@
 <?php
 
 use Framework\Database;
+use Framework\Validator;
 
 if (!function_exists('rootPath')) {
     function rootPath(string $path): string {
@@ -38,7 +39,7 @@ if (!function_exists('isActive')) {
                 : str_starts_with($currentUri, $path);
 
             if ($match) {
-                return 'bg-gray-900 text-white';
+                return 'bg-blue-900 text-white';
             }
         }
 
@@ -89,5 +90,43 @@ if (!function_exists('db')) {
         }
 
         return $db;
+    }
+}
+
+if (!function_exists('validator')) {
+    function validator(array $data = [], array $rules = []): Validator
+    {
+        static $validator = null;
+
+        // Si no existe la instancia o se pasan nuevas reglas, se instancia/actualiza
+        if ($validator === null || !empty($rules)) {
+            $validator = new Validator($data, $rules);
+        }
+
+        return $validator;
+    }
+}
+
+if (!function_exists('errors')) {
+    function errors(): void
+    {
+        require rootPath('resources/partials/errors.php');
+    }
+}
+
+if (!function_exists('partials')) {
+    function partials(string $name, array $data = []): void
+    {
+        extract($data);
+        $filePath = rootPath("resources/partials/{$name}.php");
+
+        require $filePath;
+    }
+}
+
+if (!function_exists('isAuthenticated')) {
+    function isAuthenticated(): bool
+    {
+        return isset($_SESSION['user']);
     }
 }

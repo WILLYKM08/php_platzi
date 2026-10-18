@@ -1,6 +1,7 @@
 <?php
 
 namespace Framework;
+use Framework\Middleware\Middleware;
 
 class Router
 {
@@ -18,45 +19,60 @@ class Router
     require $filePath;
   }
 
-  public function run ()
+  public function run()
   {
     $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+    $method = $_POST['_method'] ?? $_SERVER['REQUEST_METHOD']; // GET, POST, DELETE, PUT
 
-    $method = $_POST['_method'] ?? $_SERVER['REQUEST_METHOD'];//GET or POST or DELETE
+    $action = $this->routes[$method][$uri]['action'] ?? null;
 
-    $action = $this->routes[$method][$uri] ?? null;
-
-    // echo '<pre>';
-    // var_dump($this->routes);
-    // die();
-
-    if(!$action) {
+    if (!$action) {
       http_response_code(404);
       echo 'Página no encontrada';
       exit;
     }
 
+    $middleware = $this->routes[$method][$uri]['middleware'] ?? null;
+    if ($middleware) {
+      //(new $middleware())();
+      Middleware::run(new $middleware());
+
+    }
+
     [$controller, $method] = $action;
+
     (new $controller)->$method();
   }
 
-  public function get($uri, $action)
+  public function get(string $uri, array $action, string|null $middleware = null)
   {
-    $this->routes['GET'][$uri] = $action;
+    $this->routes['GET'][$uri] = [
+      'action'      =>  $action,
+      'middleware'  =>  $middleware
+      ];
   }
 
-  public function post($uri, $action)
+  public function post(string $uri, array $action, string|null $middleware = null)
   {
-    $this->routes['POST'][$uri] = $action;
+    $this->routes['POST'][$uri] = [
+      'action'      =>  $action,
+      'middleware'  =>  $middleware
+      ];
   }
 
-  public function delete($uri, $action)
+  public function delete(string $uri, array $action, string|null $middleware = null)
   {
-    $this->routes['DELETE'][$uri] = $action;
+    $this->routes['DELETE'][$uri] = [
+      'action'      =>  $action,
+      'middleware'  =>  $middleware
+      ];
   }
 
-  public function put($uri, $action)
+  public function put(string $uri, array $action, string|null $middleware = null)
   {
-    $this->routes['PUT'][$uri] = $action;
+    $this->routes['PUT'][$uri] = [
+      'action'      =>  $action,
+      'middleware'  =>  $middleware
+      ];
   }
 }

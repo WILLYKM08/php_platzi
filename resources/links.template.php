@@ -1,4 +1,4 @@
-<?php require __DIR__ . '/partials/header.php'; ?>
+<?php partials('header'); ?>
 <div class="border-b border-gray-200 pb-8 mb-8">
     <h2 class="text-4xl font-semibold text-gray-900 sm:text-5xl">Mis proyectos recientes</h2>
 
@@ -19,6 +19,8 @@
             </h3>
             
             <p class="mt-2 text-sm text-gray-600"><?= $link['description'] ?></p>
+
+            <?php if (isAuthenticated()): ?>
             <div class="flex items-center justify-end gap-4 mt-6">
                 <form action="/links/delete" method="POST" onsubmit="return confirm('¿Estás seguro de eliminar?');">
                     <input type="hidden" name="_method" value="DELETE">        
@@ -33,14 +35,20 @@
                     Editar &rarr;
                 </a>
             </div>
+            <?php endif; ?>
+
         </article>
 
     <?php endforeach; ?>
 
 </div>
+
+<?php if (isAuthenticated()): ?>
 <div class="my-16">
     <a href="/links/create" class="text-sm font-semibold text-gray-900">
         Registrar &rarr;
     </a>
 </div>
-<?php require __DIR__ . '/partials/footer.php'; ?>
+<?php endif; ?>
+
+<?php partials('footer'); ?>

@@ -33,9 +33,15 @@ class Database
     return $this->statement->fetchAll();
   }
 
+  public function first()
+  {
+    return $this->statement->fetch();
+  }
+
+  
   public function firstOrFail()
   {
-    $result = $this->statement->fetch();
+    $result = $this->first();
     if (!$result) {
       http_response_code(404);
       exit('404 Not Found');

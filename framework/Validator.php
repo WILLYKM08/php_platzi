@@ -39,7 +39,8 @@ class Validator
           'min'       => $this->validateMin($value, $parameters, $field),
           'max'       => $this->validateMax($value, $parameters, $field),
           'url'       => $this->validateUrl($value, $field),
-          default     => null,
+          'email'     => $this->validateEmail($value, $field),
+          default     => throw new \InvalidArgumentException("Validation rule '$name' is not defined."),
       };
     }
 
@@ -68,9 +69,15 @@ class Validator
         return empty($this->errors);
     }
 
+    public function validateEmail(string $value, string $field): ?string
+    {
+        return !filter_var($value, FILTER_VALIDATE_EMAIL) ? "El campo {$field} debe ser una E-mail válido." : null;
+    }
+
     public function errors(): array
     {
         return $this->errors;
+    
     }
   
 }
