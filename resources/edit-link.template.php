@@ -34,8 +34,7 @@
             <textarea 
                 name="description" 
                 rows="2" 
-                class="w-full outline-1 outline-gray-300 rounded-md px-4 py-2 text-gray-900">
-                <?= old('description', $link['description']) ?>
+                class="w-full outline-1 outline-gray-300 rounded-md px-4 py-2 text-gray-900"><?= old('description', $link['description']) ?>
             </textarea>
         </div>
     </div>

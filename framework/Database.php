@@ -11,8 +11,14 @@ class Database
 
   public function __construct()
   {
-    $dsn = 'pgsql:host=localhost;dbname=php_db';
-    $this->connection = new PDO($dsn, 'postgres', 'Admin1994**');
+    //$dsn = 'pgsql:host=localhost;dbname=php_db';
+    $dsn = sprintf(
+      '%s:host=%s;dbname=%s',
+      config('connection'),
+      config('host', 'localhost'),
+      config('dbname', 'php_db')
+    );
+    $this->connection = new PDO($dsn, config('username'), config('password'), config('options', []));
   }
 
   public function query($sql, $params = [])
@@ -24,12 +30,12 @@ class Database
 
   public function get()
   {
-    return $this->statement->fetchAll(PDO::FETCH_ASSOC);
+    return $this->statement->fetchAll();
   }
 
   public function firstOrFail()
   {
-    $result = $this->statement->fetch(PDO::FETCH_ASSOC);
+    $result = $this->statement->fetch();
     if (!$result) {
       http_response_code(404);
       exit('404 Not Found');

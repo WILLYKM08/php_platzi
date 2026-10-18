@@ -7,13 +7,12 @@ class PostsController
 {
     public function show()
     {
-        $db = new Database();
 
         view(
             'posts', 
             [
                 'title' => 'Publicaciones',
-                'post'  => $db
+                'post'  => db()
                 ->query('SELECT * FROM posts WHERE id = :id ORDER BY id DESC',
                 [
                     'id' => $_GET['id'] ?? null
