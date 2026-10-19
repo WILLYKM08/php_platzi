@@ -1,4 +1,6 @@
-<?php $errors = validator()->errors(); ?>
+<?php $errors = sessionManager()->getFlash('errors') ?? []; ?>
+<?php if(!is_array($errors)) : $errors=[$errors]; ?>
+<?php endif; ?>
 
 <?php if (!empty($errors)): ?>
     <ul class="mt-4 text-red-500">

@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use Framework\Validator;
 class AuthController
 {
   public function login()
@@ -11,35 +12,28 @@ class AuthController
 
   public function authenticate()
   {
-    $validator = validator($_POST,[
+    Validator::make($_POST,[
       'user'    =>    'required|email',
       'password' =>    'required|min:6',
     ]);
 
-    if($validator->passes()) {
-      $user = db()->query('SELECT * FROM users WHERE username = :username', [
-        'username' => $_POST['user']
-      ])->first();
+    $login = auth()->login($_POST['user'], $_POST['password']);
 
-      if($user && password_verify($_POST['password'], $user['password'])) {
-      $_SESSION['user'] = [
-        'id'  =>  $user['id'],
-        'user'=>  $user['email'],
-        'name'=>  $user['name'],
-      ];
+    if(!$login) 
+    {
+      sessionManager()->setFlash('errors', 'Usuario o contraseña inválidos');
+      sessionManager()->setFlash('old_user', $_POST['user'] ?? '');
 
-      redirect('/');
+      back();
     }
-    }
-
-
-    view('login');
+    
+    redirect('/');
   }
+
 
   public function logout() 
   {
-    unset($_SESSION['user']);
-    session_destroy();
-    redirect('/');
+    auth()->logout();
+    redirect('/login');
   }
 }

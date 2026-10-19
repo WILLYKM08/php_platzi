@@ -1,6 +1,8 @@
 <?php
 
+use Framework\Authenticate;
 use Framework\Database;
+use Framework\SessionManager;
 use Framework\Validator;
 
 if (!function_exists('rootPath')) {
@@ -48,11 +50,11 @@ if (!function_exists('isActive')) {
 }
 
 if (!function_exists('old')) {
-    function old(string $key, ?string $default = ''): string 
+    function old(string $key, mixed $default = null): mixed 
     {
-        $value = $_POST[$key] ?? $default ?? '';
-        
-        return htmlspecialchars($value, ENT_QUOTES, 'UTF-8');
+        $key = 'old_' . $key;
+
+        return sessionManager()->getFlash($key, $default);
     }
 }
 
@@ -73,8 +75,13 @@ if (!function_exists('env')) {
 }
 
 if (!function_exists('redirect')) {
-    function redirect(string $uri): void 
+    function redirect(string $uri, string|null $message = null, int $status = 302): void 
     {
+        if($message) {
+            sessionManager()->setFlash('message', $message);
+        }
+
+        http_response_code($status);
         header("Location: /" . normalize_path($uri));
         exit;
     }
@@ -90,6 +97,19 @@ if (!function_exists('db')) {
         }
 
         return $db;
+    }
+}
+
+if (!function_exists('auth')) {
+    function auth(): Authenticate
+    {
+        static $auth = null;
+
+        if ($auth === null) {
+            $auth = new Authenticate();
+        }
+
+        return $auth;
     }
 }
 
@@ -128,5 +148,26 @@ if (!function_exists('isAuthenticated')) {
     function isAuthenticated(): bool
     {
         return isset($_SESSION['user']);
+    }
+}
+
+if (!function_exists('back')) {
+    function back(): void
+    {
+        header('Location: ' . $_SERVER['HTTP_REFERER'] ?? '/');
+        exit();
+    }
+}
+
+if (!function_exists('sessionManager')) {
+    function sessionManager(): SessionManager
+    {
+        static $sm = null;
+
+        if ($sm === null) {
+            $sm = new SessionManager();
+        }
+
+        return $sm;
     }
 }
